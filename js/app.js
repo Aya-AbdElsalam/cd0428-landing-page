@@ -1,62 +1,75 @@
-/**
- * 
- * Manipulating the DOM exercise.
- * Exercise programmatically builds navigation,
- * scrolls to anchors from navigation,
- * and highlights section in viewport upon scrolling.
- * 
- * Dependencies: None
- * 
- * JS Version: ES2015/ES6
- * 
- * JS Standard: ESlint
- * 
-*/
+// global variables
+let timeout;
+const navBar = document.querySelector(".page__header");
+const sections = [...document.querySelectorAll("section")];
+const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+const headers = [...document.querySelectorAll("h2")];
 
-/**
- * Comments should be present at the beginning of each procedure and class.
- * Great to have comments before crucial code sections within the procedure.
-*/
+// Generate nav items dynamically based on sections
+const listItems = headers
+  .map(
+    (header, index) =>
+      `<li><a href="#${sections[index].id}">${header.textContent}</a></li>`
+  )
+  .join("");
 
-/**
- * Define Global Variables
- * 
-*/
+document.querySelector("#navbar__list").innerHTML = listItems;
 
+// Hide the navbar after a specified delay
+function hideNavBar() {
+  navBar.style.top = "-60px";
+}
 
-/**
- * End Global Variables
- * Start Helper Functions
- * 
-*/
+// Show the navbar instantly
+function showNavBar() {
+  navBar.style.top = "0";
+}
 
+// Handle navbar visibility on scroll
+window.addEventListener("scroll", () => {
+  showNavBar();
+  timeout = setTimeout(hideNavBar, 3000);
+});
 
+// Active Section & link in navbar
+function makeActive() {
+  const navLinks = document.querySelectorAll(".navbar__menu ul li a");
+  // Loop through sections to determine the active one
+  for (let i = 0; i < sections.length; i++) {
+    const section = sections[i];
+    const box = section.getBoundingClientRect();
+    if (box.top <= 150 && box.bottom >= 150) {
+      section.classList.add("active");
+      navLinks[i].classList.add("active");
+    } else {
+      section.classList.remove("active");
+      navLinks[i].classList.remove("active");
+    }
+  }
+}
 
-/**
- * End Helper Functions
- * Begin Main Functions
- * 
-*/
+//toggle the visibility of the button based on scroll position
+function toggleScrollToTopBtn() {
+  if (window.scrollY > window.innerHeight) {
+    scrollToTopBtn.style.display = "block";
+  } else {
+    scrollToTopBtn.style.display = "none";
+  }
+}
 
-// build the nav
+// scroll to the top when the button is clicked
+scrollToTopBtn.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
+// Collapse sections
+document.querySelectorAll(".top-container button").forEach((button, index) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".collapse")[index].classList.toggle("open");
+  });
+});
 
-// Add class 'active' to section when near top of viewport
-
-
-// Scroll to anchor ID using scrollTO event
-
-
-/**
- * End Main Functions
- * Begin Events
- * 
-*/
-
-// Build menu 
-
-// Scroll to section on link click
-
-// Set sections as active
-
-
+window.addEventListener("scroll", () => {
+  makeActive();
+  toggleScrollToTopBtn();
+});
