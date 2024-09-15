@@ -4,6 +4,7 @@ const navBar = document.querySelector(".page__header");
 const sections = [...document.querySelectorAll("section")];
 const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 const headers = [...document.querySelectorAll("h2")];
+const navbarList = document.getElementById("navbar__list");
 
 // Generate nav items dynamically based on sections
 const listItems = headers
@@ -27,8 +28,9 @@ function showNavBar() {
 
 // Handle navbar visibility on scroll
 window.addEventListener("scroll", () => {
+  clearTimeout(timeout)
   showNavBar();
-  timeout = setTimeout(hideNavBar, 3000);
+  timeout = setTimeout(hideNavBar, 10000);
 });
 
 // Active Section & link in navbar
@@ -67,6 +69,15 @@ document.querySelectorAll(".top-container button").forEach((button, index) => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".collapse")[index].classList.toggle("open");
   });
+});
+navbarList.addEventListener("click", function (event) {
+    event.preventDefault();
+    const sectionId = event.target.getAttribute("href").substring(1);
+    const targetSection = document.getElementById(sectionId);
+    targetSection.scrollIntoView({
+      behavior: "smooth",
+    });
+  
 });
 
 window.addEventListener("scroll", () => {
